@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вхід</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", sans-serif;
+            background-color: #0a1a4f;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 223, 0, 0.4);
+            padding: 50px;
+            width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #0a1a4f;
+            margin-bottom: 20px;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #f9e45b, #f2c300);
+            color: #0a1a4f;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, #ffe65c, #ffd500);
+        }
+
+        .bottom-text {
+            margin-top: 15px;
+            color: #333;
+        }
+
+        .bottom-text a {
+            color: #0a1a4f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .bottom-text a:hover {
+            text-decoration: underline;
+        }
+
+        h2.error {
+            color: red;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if error %}
+        <h2 class="error">{{error}}</h2>
+        {% endif %}
+
+        <h2>Вхід</h2>
+        <form method="post">
+            <input type="text" name="username" placeholder="Ім’я користувача" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit">Увійти</button>
+        </form>
+
+        <div class="bottom-text">
+            Ще не маєте акаунта? <a href="/register">Зареєструватися</a>
+        </div>
+    </div>
+</body>
+</html>

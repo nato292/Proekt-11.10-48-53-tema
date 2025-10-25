@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ problem.title }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", sans-serif;
+            background-color: #0a1a4f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 223, 0, 0.4);
+            padding: 40px;
+            width: 500px;
+            text-align: center;
+            color: #0a1a4f;
+        }
+
+        h2 {
+            color: #0a1a4f;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        p {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #f9e45b;
+        }
+
+        small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+        }
+
+        .answer {
+            background-color: #f9f3d2;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Проблема: {{ problem.title }}</h2>
+        <p>{{ problem.description }}</p>
+        {% if problem.image_url %}
+            <img src="/static/{{ problem.image_url }}" alt="Зображення проблеми">
+        {% endif %}
+        <small>Дата створення: {{ problem.date_created }}</small>
+        <small>Статус: {{ problem.status }}</small>
+
+        {% if answer %}
+            <div class="answer">
+                <h2>Відповідь:</h2>
+                <p>{{ answer.message }}</p>
+                <small>Дата відповіді: {{ answer.date_responded }}</small>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

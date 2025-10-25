@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Список заявок</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #007bff, #ffde00);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #004aad;
+            margin-top: 40px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .problems-container {
+            margin-top: 30px;
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-bottom: 40px;
+        }
+
+        .problem-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            padding: 20px 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.2);
+        }
+
+        h3 {
+            color: #004aad;
+            margin-bottom: 8px;
+        }
+
+        p {
+            margin: 6px 0;
+            color: #333;
+        }
+
+        small {
+            color: #555;
+            font-size: 13px;
+        }
+
+        .status {
+            font-weight: bold;
+            color: #004aad;
+        }
+
+        a {
+            display: inline-block;
+            background: #004aad;
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            margin-top: 8px;
+            transition: background 0.3s ease;
+        }
+
+        a:hover {
+            background: #006eff;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 14px;
+            color: #003d8f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Список заявок</h1>
+
+    <div class="problems-container">
+        {% for i in problems %}
+        <div class="problem-card">
+            <h3>{{ i.title }}</h3>
+            <p>{{ i.description }}</p>
+            <small>📅 {{ i.date_created }}</small>
+            <p class="status">Статус: {{ i.status }}</p>
+
+            {% if i.status == 'Завершено' %}
+                <a href="/service_record?id={{ i.id }}">Талон обслуговування</a>
+            {% elif i.status == 'Є відповідь' %}
+                <a href="/check_message?id={{ i.id }}">Перевірити повідомлення</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer>© 2025 Система обслуговування</footer>
+</body>
+</html>

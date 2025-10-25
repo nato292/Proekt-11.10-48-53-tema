@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Нові запити</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fafafa;
+            margin: 40px;
+        }
+
+        h2 {
+            color: #222;
+        }
+
+        .problem-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .problem-card h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .problem-card small {
+            color: #777;
+        }
+
+        button {
+            margin-top: 10px;
+            background-color: #2d89ef;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1e5dbf;
+        }
+    </style>
+</head>
+<body>
+    <h2>Нові запити (в обробці):</h2>
+    {% if problems %}
+        {% for i in problems %}
+            <div class="problem-card">
+                <h3>{{ i.title }}</h3>
+                <p>{{ i.description }}</p>
+                <small>Створено: {{ i.date_created }}</small>
+                <form action="/problem">
+                    <input type="hidden" name="problem_id" value="{{ i.id }}">
+                    <button type="submit">Переглянути</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Немає нових запитів у статусі "В обробці".</p>
+    {% endif %}
+</body>
+</html>
