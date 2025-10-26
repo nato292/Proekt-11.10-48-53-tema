@@ -198,23 +198,6 @@ async def take_problem(request: Request, current_user: User = Depends(get_curren
         await session.refresh(problem)
     return templates.TemplateResponse('problem_check.html', {'request': request, 'problem': problem, 'message':'Заявку взято в роботу!'})
 
-@app.get('/add_answer')
-async def add_answer( problem_id: int,request: Request, is_admin: int = Depends(admin_required)):
-    return templates.TemplateResponse('add_answer.html', {'request': request, 'id':problem_id})
-
-@app.post('/add_answer')
-async def add_answer(request: Request,problem_id:int = Form() , current_user: User = Depends(get_current_user), message:str= Form(),session: AsyncSession = Depends(get_session), is_admin: int = Depends(admin_required) ):
-    new_answer = AdminResponse(message=message, admin_id = current_user[0], problem_id= problem_id)
-    session.add(new_answer)
-    await session.commit()
-
-    problem = await session.execute(select(Problem).filter_by(id=problem_id))
-    problem = problem.scalars().one_or_none()
-    problem.status = 'Є відповідь'
-    session.add(problem)
-    await session.commit()
-    return templates.TemplateResponse('add_answer.html', {'request': request, 'message':'Відповідь збережена!'})
-
 @app.get('/check_message')
 async def my_all_prblms(id :int, request: Request, current_user: User = Depends(get_current_user), session: AsyncSession = Depends(get_session)):
     problem = await session.execute(select(Problem).filter_by(id=id))
@@ -223,33 +206,32 @@ async def my_all_prblms(id :int, request: Request, current_user: User = Depends(
     problem_answer = problem_answer.scalars().one_or_none()
     return templates.TemplateResponse('check_message.html',{'request':request, 'problem':problem, 'answer':problem_answer})
 
-#################################################### Закінчення обслуговування
-
-@app.get('/service_complete')
-async def service_complete_get(problem_id:int, request: Request):
-    return templates.TemplateResponse('service_complete.html',{'request':request, "problem_id":problem_id})
-
-@app.post('/service_complete')
-async def service_complete(request: Request, work_done: str = Form(), parts_used: str = Form(), problem_id:int = Form(),current_user: User = Depends(get_current_user), session: AsyncSession = Depends(get_session), is_admin: int = Depends(admin_required)):
-    problem = await session.execute(select(Problem).filter_by(id=problem_id))
-    problem = problem.scalars().one_or_none()
-    warranty_info = f"# {problem_id}\\nТип послуги: сервісне обслуговування\\nДата початку робіт: {problem.date_created.date()}\\nДата завершення робіт: {date.today()}\\nГарантія розповсюджується на деталі що використовувалися в роботі, та механізми що були полагоджені\\nДата завершення гарантії: {date.today() + timedelta(days=180)}"
-    new_service_record = ServiceRecord(work_done=work_done, parts_used=parts_used, problem_id=problem_id,warranty_info=warranty_info)
-    session.add(new_service_record)
-    await session.commit()
-    problem.status = 'Завершено'
-    session.add(problem)
-    await session.commit()
-    return templates.TemplateResponse('service_complete.html', {'request': request, "message": 'Запис додано!'})
+#################################################### Передивлятися проблеми
 
 @app.get('/service_record_review')
-async def service_record_review(id:int, request: Request, current_user: User = Depends(get_current_user), session: AsyncSession = Depends(get_session)):
-    problem = await session.execute(select(Problem).filter_by(id=id))
-    problem = problem.scalars().one_or_none()
-    service_record = await session.execute(select(ServiceRecord).filter_by(problem_id = id))
-    my_service_record = service_record.scalars().one_or_none()
-    return templates.TemplateResponse('service_check.html',{'request':request, 'problem':problem, 'service_record':my_service_record})
+async def service_record_review(
+    id: int,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session)
+):
+    problem_result = await session.execute(select(Problem).filter_by(id=id))
+    problem = problem_result.scalars().one_or_none()
 
+    if not problem:
+        raise HTTPException(status_code=404, detail="Problem not found")
+
+    record_result = await session.execute(select(ServiceRecord).filter_by(problem_id=id))
+    service_record = record_result.scalars().one_or_none()
+
+    return templates.TemplateResponse(
+        'service_check.html',
+        {
+            'request': request,
+            'problem': problem,
+            'service_record': service_record
+        }
+    )
 #################################################### Админка
 
 @app.get('/admin_problems')

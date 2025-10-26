@@ -79,4 +79,4 @@ class Users_in_telegram(Base):
     tg_code = Column(String(100))
     user_tg_id = Column(String(50), nullable=True)
     user_in_site = Column(Integer,ForeignKey('users.id'))
-    date_created = Column(DateTime(timezone=True), server_default=func.now())  
+    date_created = Column(DateTime(timezone=True), server_default=func.now())
